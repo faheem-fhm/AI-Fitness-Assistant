@@ -22,7 +22,7 @@ except ImportError:
                     os.environ.setdefault(k.strip(), v.strip())
 
 class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'fitai-local-secret-key')
+    SECRET_KEY = os.environ.get('SECRET_KEY')
     DATABASE = os.path.join(BASE_DIR, 'database', 'fitai.db')
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max upload
