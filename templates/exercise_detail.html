@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exercise.name }} - FitAI Pro{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+  <div style="margin-bottom: 1.5rem;">
+    <a href="{{ url_for('exercises') }}" class="btn btn-secondary" style="padding: 0.4rem 1rem; font-size: 0.85rem;">← Back to Catalog</a>
+  </div>
+
+  <div class="grid-2" style="margin-bottom: 3rem;">
+    
+    <!-- Exercise GIF Player & Video Tutorial -->
+    <div>
+      <div class="glass-card" style="margin-bottom: 1.5rem; text-align: center;">
+        <h4 style="margin-bottom: 0.75rem; color: var(--secondary);">🎥 Exercise GIF Animation</h4>
+        <img src="{{ exercise.gifUrl }}" alt="{{ exercise.name }}" style="width: 100%; max-height: 360px; object-fit: contain; border-radius: var(--radius-md);" onerror="this.src='https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500';">
+      </div>
+
+      <!-- YouTube Tutorial — Single Clickable Thumbnail Card -->
+      <div class="glass-card">
+        <h4 style="margin-bottom: 0.75rem; color: var(--accent-cyan);">📺 {{ exercise.name }} — Tutorial Video</h4>
+        <a href="https://www.youtube.com/watch?v={{ vid_id }}" target="_blank" rel="noopener"
+           style="display: block; position: relative; border-radius: var(--radius-md); overflow: hidden; text-decoration: none;">
+          <!-- YouTube thumbnail as background -->
+          <img src="{{ vid_thumb }}" alt="{{ exercise.name }} tutorial"
+               style="width: 100%; height: 220px; object-fit: cover; display: block; filter: brightness(0.6);"
+               onerror="this.src='https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&q=80';">
+          <!-- Dark gradient overlay -->
+          <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.15) 55%, transparent 100%);"></div>
+          <!-- YouTube Play Button -->
+          <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -55%); width: 64px; height: 64px; background: #ff0000; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 24px rgba(255,0,0,0.5); transition: transform 0.2s;"
+               onmouseover="this.style.transform='translate(-50%,-55%) scale(1.1)'"
+               onmouseout="this.style.transform='translate(-50%,-55%) scale(1)'">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <!-- YouTube badge top-right -->
+          <div style="position: absolute; top: 0.6rem; right: 0.6rem; background: #ff0000; border-radius: 4px; padding: 0.15rem 0.5rem; display: flex; align-items: center; gap: 0.25rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+            <span style="color: white; font-size: 0.7rem; font-weight: 700;">YouTube</span>
+          </div>
+          <!-- Exercise name label at bottom -->
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 0.75rem 1rem;">
+            <div style="font-size: 0.68rem; color: #ff6b6b; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.15rem;">Tutorial Video</div>
+            <div style="font-size: 0.95rem; font-weight: 700; color: white;">{{ exercise.name }} — Proper Form & Technique</div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Specifications, MET Calorie Formula & AI Explanation -->
+    <div>
+      <div class="glass-card" style="margin-bottom: 1.5rem;">
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap;">
+          <span class="badge badge-primary">{{ exercise.bodyPart }}</span>
+          <span class="badge badge-{{ exercise.difficulty.lower() }}">{{ exercise.difficulty }}</span>
+          <span class="badge" style="background: rgba(255,255,255,0.05); color: white;">{{ exercise.category }}</span>
+        </div>
+
+        <h1 style="font-size: 2.2rem; margin-bottom: 1rem;">{{ exercise.name }}</h1>
+
+        <!-- Metrics Grid -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; background: rgba(0,0,0,0.25); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+          <div>
+            <small style="color: var(--text-muted);">Target Muscle</small>
+            <div style="font-weight: 700; font-size: 1.1rem; color: var(--secondary);">{{ exercise.target.title() }}</div>
+          </div>
+          <div>
+            <small style="color: var(--text-muted);">Equipment</small>
+            <div style="font-weight: 700; font-size: 1.1rem; color: var(--primary);">{{ exercise.equipment.title() }}</div>
+          </div>
+          <div>
+            <small style="color: var(--text-muted);">Secondary Muscles</small>
+            <div style="font-weight: 600; font-size: 0.95rem; color: #cbd5e1;">{{ exercise.secondaryMuscles or 'Core / Stabilizers' }}</div>
+          </div>
+          <div>
+            <small style="color: var(--text-muted);">Calories Burned / 15 min</small>
+            <div style="font-weight: 700; font-size: 1.1rem; color: var(--accent-orange);">
+              ~{{ exercise.caloriesBurned }} kcal <span style="font-size: 0.75rem; color: var(--text-muted);">(MET {{ exercise.met }})</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Explanation Box -->
+        <div style="background: rgba(99, 102, 241, 0.12); padding: 1rem; border-left: 4px solid var(--primary); border-radius: var(--radius-sm); margin-bottom: 1.5rem;">
+          <h4 style="color: #a5b4fc; margin-bottom: 0.4rem;">🤖 AI Coach Explanation</h4>
+          <p style="font-size: 0.9rem; color: #e2e8f0; line-height: 1.6;">{{ ai_explanation }}</p>
+        </div>
+
+        <h3 style="margin-bottom: 0.75rem;">📋 Step-by-Step Instructions</h3>
+        <p style="color: #e2e8f0; font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem;">
+          {{ exercise.instructions }}
+        </p>
+
+        <!-- Log Workout to History -->
+        {% if current_user %}
+        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: var(--radius-md); padding: 1.25rem;">
+          <h4 style="color: var(--secondary); margin-bottom: 1rem;">✅ Log This Workout to History</h4>
+          <form action="{{ url_for('log_workout') }}" method="POST">
+            <input type="hidden" name="exercise_name" value="{{ exercise.name }}">
+            <input type="hidden" name="exercise_id" value="{{ exercise.id }}">
+            <div class="grid-3" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>Sets</label>
+                <input type="number" name="sets" class="form-control" value="3" min="1" max="20">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>Reps</label>
+                <input type="number" name="reps" class="form-control" value="10" min="1" max="100">
+              </div>
+              <div class="form-group" style="margin-bottom: 0;">
+                <label>Weight (kg)</label>
+                <input type="number" name="weight_kg" class="form-control" value="0" step="0.5" min="0">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-accent" style="width: 100%;">Save to Workout History</button>
+          </form>
+        </div>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="btn btn-secondary" style="width: 100%;">🔐 Login to Log Workout</a>
+        {% endif %}
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Similar Exercises Row -->
+  {% if related %}
+  <div>
+    <h3 style="margin-bottom: 1.5rem;">Similar {{ exercise.bodyPart.title() }} Exercises</h3>
+    <div class="grid-3">
+      {% for ex in related %}
+        <div class="glass-card">
+          <img src="{{ ex.gifUrl }}" style="width: 100%; height: 160px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 0.75rem;" onerror="this.src='https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500';">
+          <h4>{{ ex.name }}</h4>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">Equipment: {{ ex.equipment.title() }}</p>
+          <a href="{{ url_for('exercise_detail', ex_id=ex.id) }}" class="btn btn-secondary" style="width: 100%; padding: 0.4rem;">View Details</a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

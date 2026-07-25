@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Login - FitAI Pro{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 3rem; padding-bottom: 5rem; max-width: 480px;">
+  <div class="glass-card">
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <h2>Welcome Back 👋</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Sign in to access your FitAI Pro dashboard</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="user@fitai.pro" required>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; margin-top: 1rem;">
+        Sign In 🚀
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">
+      Don't have an account? <a href="{{ url_for('register') }}" style="color: var(--primary); font-weight: 600;">Sign up free</a>
+    </div>
+
+    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-glass); text-align: center; font-size: 0.8rem; color: var(--text-muted);">
+      💡 Demo Credentials: <b>user@fitai.pro</b> / <b>password123</b>
+    </div>
+  </div>
+</div>
+{% endblock %}

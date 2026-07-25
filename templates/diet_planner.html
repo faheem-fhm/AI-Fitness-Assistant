@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}South Indian AI Diet Planner - FitAI Pro{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <h2>🍲 AI South Indian Diet Planner</h2>
+    <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto;">
+      Tailored regional diet recommendations using authentic South Indian meals dataset with precise calories, protein, carbs, and fat breakdown.
+    </p>
+  </div>
+
+  <!-- Diet Planner Config Form -->
+  <div class="glass-card" style="margin-bottom: 2.5rem;">
+    <form id="diet-form" method="GET" action="{{ url_for('diet_planner') }}">
+      
+      <div class="grid-4" style="align-items: end; gap: 1rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>🎯 Target Calorie Goal</label>
+          <input type="number" name="calories" class="form-control" value="{{ current_calories or targets.target_calories }}" required>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>🥗 Diet Preference</label>
+          <select name="diet_pref" class="form-control">
+            <option value="any" {% if current_pref == 'any' %}selected{% endif %}>Any (Veg & Non-Veg)</option>
+            <option value="vegetarian" {% if current_pref == 'vegetarian' %}selected{% endif %}>Pure Vegetarian</option>
+            <option value="non_vegetarian" {% if current_pref == 'non_vegetarian' %}selected{% endif %}>Non-Vegetarian</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>🏆 Fitness Goal</label>
+          <select name="goal" class="form-control">
+            <option value="Gain Muscle" {% if current_goal == 'Gain Muscle' %}selected{% endif %}>Gain Muscle</option>
+            <option value="Lose Fat" {% if current_goal == 'Lose Fat' %}selected{% endif %}>Lose Fat</option>
+            <option value="Stay Fit" {% if current_goal == 'Stay Fit' %}selected{% endif %}>Stay Fit</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">
+          Regenerate Meal Plan 🥗
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Generated Meal Plan Cards Grid -->
+  <div id="meal-plan-container" class="grid-2" style="margin-bottom: 3rem;">
+    
+    <!-- Breakfast -->
+    <div class="glass-card" style="border-left: 4px solid var(--primary);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="color: var(--primary);">🌅 Breakfast</h3>
+        <span class="badge badge-primary">{{ diet_plan.breakfast.diet }}</span>
+      </div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">{{ diet_plan.breakfast.title }}</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <b>Ingredients:</b> {{ diet_plan.breakfast.ingredients }}
+      </p>
+      <div style="display: flex; gap: 1rem; font-size: 0.9rem; color: #cbd5e1; background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm);">
+        <div>⚡ <b>Cal:</b> {{ diet_plan.breakfast.calories_num }} kcal</div>
+        <div>🥩 <b>Protein:</b> {{ diet_plan.breakfast.protein_num }}g</div>
+        <div>🌾 <b>Carbs:</b> {{ diet_plan.breakfast.carbs_num }}g</div>
+      </div>
+    </div>
+
+    <!-- Lunch -->
+    <div class="glass-card" style="border-left: 4px solid var(--secondary);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="color: var(--secondary);">☀️ Lunch</h3>
+        <span class="badge badge-beginner">{{ diet_plan.lunch.diet }}</span>
+      </div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">{{ diet_plan.lunch.title }}</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <b>Ingredients:</b> {{ diet_plan.lunch.ingredients }}
+      </p>
+      <div style="display: flex; gap: 1rem; font-size: 0.9rem; color: #cbd5e1; background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm);">
+        <div>⚡ <b>Cal:</b> {{ diet_plan.lunch.calories_num }} kcal</div>
+        <div>🥩 <b>Protein:</b> {{ diet_plan.lunch.protein_num }}g</div>
+        <div>🌾 <b>Carbs:</b> {{ diet_plan.lunch.carbs_num }}g</div>
+      </div>
+    </div>
+
+    <!-- Snack -->
+    <div class="glass-card" style="border-left: 4px solid var(--accent-orange);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="color: var(--accent-orange);">☕ Evening Snack</h3>
+        <span class="badge" style="background: rgba(249, 115, 22, 0.2); color: #fb923c;">{{ diet_plan.snack.diet }}</span>
+      </div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">{{ diet_plan.snack.title }}</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <b>Ingredients:</b> {{ diet_plan.snack.ingredients }}
+      </p>
+      <div style="display: flex; gap: 1rem; font-size: 0.9rem; color: #cbd5e1; background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm);">
+        <div>⚡ <b>Cal:</b> {{ diet_plan.snack.calories_num }} kcal</div>
+        <div>🥩 <b>Protein:</b> {{ diet_plan.snack.protein_num }}g</div>
+      </div>
+    </div>
+
+    <!-- Dinner -->
+    <div class="glass-card" style="border-left: 4px solid var(--accent-cyan);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h3 style="color: var(--accent-cyan);">🌙 Dinner</h3>
+        <span class="badge" style="background: rgba(6, 182, 212, 0.2); color: #67e8f9;">{{ diet_plan.dinner.diet }}</span>
+      </div>
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">{{ diet_plan.dinner.title }}</h2>
+      <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+        <b>Ingredients:</b> {{ diet_plan.dinner.ingredients }}
+      </p>
+      <div style="display: flex; gap: 1rem; font-size: 0.9rem; color: #cbd5e1; background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm);">
+        <div>⚡ <b>Cal:</b> {{ diet_plan.dinner.calories_num }} kcal</div>
+        <div>🥩 <b>Protein:</b> {{ diet_plan.dinner.protein_num }}g</div>
+        <div>🌾 <b>Carbs:</b> {{ diet_plan.dinner.carbs_num }}g</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Summary Card -->
+  <div class="glass-card" style="text-align: center;">
+    <h3>📊 Daily South Indian Diet Summary</h3>
+    <div style="display: flex; justify-content: center; gap: 3rem; margin-top: 1.5rem; flex-wrap: wrap;">
+      <div>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">~{{ diet_plan.total_calories }}</div>
+        <small style="color: var(--text-muted);">Total Calories (kcal)</small>
+      </div>
+      <div>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--secondary);">~{{ diet_plan.total_protein }}g</div>
+        <small style="color: var(--text-muted);">Protein Target</small>
+      </div>
+      <div>
+        <div style="font-size: 2rem; font-weight: 800; color: var(--accent-cyan);">3.5 L</div>
+        <small style="color: var(--text-muted);">Hydration Target</small>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

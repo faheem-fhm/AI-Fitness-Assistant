@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}AI Chatbot - FitAI Pro Assistant{% endblock %}
+
+{% block extra_css %}
+<style>
+  .chat-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    height: 75vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+  .chat-msg {
+    display: flex;
+    max-width: 85%;
+  }
+  .user-msg {
+    align-self: flex-end;
+  }
+  .bot-msg {
+    align-self: flex-start;
+  }
+  .msg-bubble {
+    padding: 1rem 1.25rem;
+    border-radius: 18px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .user-msg .msg-bubble {
+    background: linear-gradient(135deg, var(--primary) 0%, #4338ca 100%);
+    color: white;
+    border-bottom-right-radius: 4px;
+  }
+  .bot-msg .msg-bubble {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    color: var(--text-main);
+    border-bottom-left-radius: 4px;
+  }
+  .bot-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    margin-bottom: 0.5rem;
+    display: inline-block;
+  }
+  .quick-prompt-pill {
+    padding: 0.4rem 0.85rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-glass);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition);
+  }
+  .quick-prompt-pill:hover {
+    background: var(--primary-glow);
+    color: white;
+    border-color: var(--primary);
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="glass-card chat-container">
+    
+    <!-- Chat Header -->
+    <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <div style="width: 45px; height: 45px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+          🤖
+        </div>
+        <div>
+          <h3 style="font-size: 1.2rem;">FitAI Pro AI Fitness Coach</h3>
+          <div style="font-size: 0.8rem; color: var(--secondary);">● Online RAG Engine</div>
+        </div>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-muted);">
+        Ask exercise specs, dataset stats, South Indian meals & workout plans!
+      </div>
+    </div>
+
+    <!-- Quick Prompt Pills -->
+    <div style="display: flex; gap: 0.5rem; overflow-x: auto; padding: 0.75rem 0; border-bottom: 1px solid var(--border-glass);">
+      <span class="quick-prompt-pill" onclick="sendQuickPrompt('What is Bench Press?')">What is Bench Press?</span>
+      <span class="quick-prompt-pill" onclick="sendQuickPrompt('Show chest exercises with dumbbell')">Dumbbell Chest Exercises</span>
+      <span class="quick-prompt-pill" onclick="sendQuickPrompt('How many exercises are available?')">Dataset Stats</span>
+      <span class="quick-prompt-pill" onclick="sendQuickPrompt('Calories in dosa')">Calories in Dosa</span>
+      <span class="quick-prompt-pill" onclick="sendQuickPrompt('High protein South Indian breakfast')">High Protein Breakfast</span>
+      <span class="quick-prompt-pill" onclick="sendQuickPrompt('Create my workout')">Create Workout Plan</span>
+    </div>
+
+    <!-- Chat Messages Window -->
+    <div id="chat-messages" class="chat-messages">
+      <div class="chat-msg bot-msg">
+        <div class="msg-bubble">
+          <span class="bot-badge">🤖 FitAI Pro Coach</span><br>
+          Hello! I am your <b>FitAI Pro Coach</b>. Ask me anything about our 870+ exercise database, South Indian regional meal plans, calories, BMI, BMR, or request a custom workout routine!
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input Form -->
+    <form id="chat-form" style="display: flex; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid var(--border-glass);">
+      <input type="text" id="chat-input" class="form-control" placeholder="Ask anything about exercises, South Indian diet, BMI, or workouts..." autocomplete="off" required>
+      <button type="submit" class="btn btn-primary" style="padding: 0.75rem 1.5rem;">Send 🚀</button>
+    </form>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/chatbot.js') }}"></script>
+{% endblock %}

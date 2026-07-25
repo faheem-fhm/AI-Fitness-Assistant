@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}AI Workout Planner - FitAI Pro{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <h2>💪 Intelligent AI Workout Planner</h2>
+    <p style="color: var(--text-muted); max-width: 700px; margin: 0 auto;">
+      Generate custom 7-day or 30-day routines (Home vs Gym, Push-Pull-Legs, Bro Split, Beginner vs Advanced).
+    </p>
+  </div>
+
+  <!-- Generator Controls Form -->
+  <div class="glass-card" style="margin-bottom: 2.5rem;">
+    <form id="workout-form" method="GET" action="{{ url_for('workout_planner') }}">
+      
+      <div class="grid-4" style="align-items: end; gap: 1rem;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>📆 Plan Duration</label>
+          <select id="plan-type" name="plan_type" class="form-control">
+            <option value="7-Day Workout" {% if current_plan_type == '7-Day Workout' %}selected{% endif %}>7-Day Workout</option>
+            <option value="30-Day Workout" {% if current_plan_type == '30-Day Workout' %}selected{% endif %}>30-Day Workout</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>🏠 Location & Setup</label>
+          <select id="location" name="location" class="form-control">
+            <option value="Gym Workout" {% if current_location == 'Gym Workout' %}selected{% endif %}>Gym Workout</option>
+            <option value="Home Workout" {% if current_location == 'Home Workout' %}selected{% endif %}>Home Workout (Bodyweight)</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>🔄 Workout Split</label>
+          <select id="split" name="split" class="form-control">
+            <option value="Push Pull Legs" {% if current_split == 'Push Pull Legs' %}selected{% endif %}>Push Pull Legs</option>
+            <option value="Bro Split" {% if current_split == 'Bro Split' %}selected{% endif %}>Bro Split (Body Part/Day)</option>
+            <option value="Full Body Split" {% if current_split == 'Full Body Split' %}selected{% endif %}>Full Body Split</option>
+          </select>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 0;">
+          <label>⚡ Experience Level</label>
+          <select id="level" name="level" class="form-control">
+            <option value="Beginner" {% if current_level == 'Beginner' %}selected{% endif %}>Beginner Plan</option>
+            <option value="Advanced" {% if current_level == 'Advanced' %}selected{% endif %}>Advanced Plan</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; text-align: right;">
+        <button type="submit" id="gen-btn" class="btn btn-primary" style="padding: 0.75rem 2rem;">
+          Generate Custom Routine ⚡
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Plan Display Card -->
+  <div class="glass-card" style="margin-bottom: 3rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+      <h2 style="color: var(--primary);">{{ plan.plan_name }}</h2>
+      <span class="badge badge-primary">{{ plan.duration }}</span>
+    </div>
+
+    <!-- Warm-up & Cooldown -->
+    <div class="grid-2" style="margin-bottom: 2rem;">
+      <div style="background: rgba(99, 102, 241, 0.1); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--primary);">
+        <h4>🔥 Warm-Up Protocol (5-10 mins)</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem; margin-top: 0.25rem;">{{ plan.warmup }}</p>
+      </div>
+      <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--secondary);">
+        <h4>🧘 Cool-Down & Mobility</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem; margin-top: 0.25rem;">{{ plan.cooldown }}</p>
+      </div>
+    </div>
+
+    <!-- Daily Routine Breakdown -->
+    <h3 style="margin-bottom: 1rem;">🗓️ Routine Schedule</h3>
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+      {% for day in plan.days %}
+        <div style="background: rgba(0,0,0,0.25); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+          <h4 style="color: var(--accent-cyan); margin-bottom: 0.75rem;">{{ day.day }}</h4>
+          {% if day.routine %}
+            <div class="grid-2">
+              {% for ex in day.routine %}
+                <div style="padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <strong style="color: white;">{{ ex.name }}</strong>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">{{ ex.bodyPart }} | {{ ex.equipment }}</div>
+                  </div>
+                  <span class="badge badge-beginner">3 Sets x 10 Reps</span>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Rest & Active Muscle Recovery Day.</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- Safety Tips -->
+    <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid #f59e0b;">
+      <h4 style="color: #fbbf24;">🛡️ Coach Safety Tips</h4>
+      <p style="color: #fef08a; font-size: 0.9rem; margin-top: 0.25rem;">{{ plan.safety_tips }}</p>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

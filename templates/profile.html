@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}User Profile - FitAI Pro{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+  <div class="grid-2" style="margin-bottom: 3rem;">
+    
+    <!-- Profile Edit Form -->
+    <div class="glass-card">
+      <h3 style="margin-bottom: 1.5rem;">👤 Profile Settings</h3>
+      
+      <form method="POST" action="{{ url_for('profile') }}">
+        <div class="form-group">
+          <label>Username</label>
+          <input type="text" class="form-control" value="{{ user.username }}" disabled>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" value="{{ user.email }}" disabled>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Age</label>
+            <input type="number" name="age" class="form-control" value="{{ user.age }}" required>
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender" class="form-control">
+              <option value="male" {% if user.gender=='male' %}selected{% endif %}>Male</option>
+              <option value="female" {% if user.gender=='female' %}selected{% endif %}>Female</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Height (cm)</label>
+            <input type="number" step="0.1" name="height" class="form-control" value="{{ user.height }}" required>
+          </div>
+          <div class="form-group">
+            <label>Weight (kg)</label>
+            <input type="number" step="0.1" name="weight" class="form-control" value="{{ user.weight }}" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Primary Fitness Goal</label>
+          <select name="goal" class="form-control">
+            <option value="Gain Muscle" {% if user.goal=='Gain Muscle' %}selected{% endif %}>Gain Muscle</option>
+            <option value="Lose Fat" {% if user.goal=='Lose Fat' %}selected{% endif %}>Lose Fat</option>
+            <option value="Stay Fit" {% if user.goal=='Stay Fit' %}selected{% endif %}>Stay Fit</option>
+            <option value="Improve Flexibility" {% if user.goal=='Improve Flexibility' %}selected{% endif %}>Improve Flexibility</option>
+            <option value="Cardio" {% if user.goal=='Cardio' %}selected{% endif %}>Cardio</option>
+            <option value="Rehabilitation" {% if user.goal=='Rehabilitation' %}selected{% endif %}>Rehabilitation</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Save Profile Updates</button>
+      </form>
+    </div>
+
+    <!-- Gamification & Badges Card -->
+    <div>
+      <div class="glass-card" style="margin-bottom: 1.5rem;">
+        <h3>🏆 Achievements & Badges</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">Earn badges as you log workouts and maintain your streak.</p>
+        
+        <div class="grid-2">
+          <div style="padding: 1rem; background: rgba(99, 102, 241, 0.15); border-radius: var(--radius-md); border: 1px solid var(--border-accent); text-align: center;">
+            <div style="font-size: 2.5rem;">🔥</div>
+            <h4 style="font-size: 1rem; margin-top: 0.5rem;">5-Day Streak</h4>
+            <small style="color: #a5b4fc;">Unlocked</small>
+          </div>
+
+          <div style="padding: 1rem; background: rgba(16, 185, 129, 0.15); border-radius: var(--radius-md); border: 1px solid var(--secondary-glow); text-align: center;">
+            <div style="font-size: 2.5rem;">🏋️‍♂️</div>
+            <h4 style="font-size: 1rem; margin-top: 0.5rem;">First Workout</h4>
+            <small style="color: #34d399;">Unlocked</small>
+          </div>
+
+          <div style="padding: 1rem; background: rgba(245, 158, 11, 0.15); border-radius: var(--radius-md); border: 1px solid rgba(245, 158, 11, 0.3); text-align: center;">
+            <div style="font-size: 2.5rem;">🥗</div>
+            <h4 style="font-size: 1rem; margin-top: 0.5rem;">Tamil Nadu Gourmet</h4>
+            <small style="color: #fbbf24;">Unlocked</small>
+          </div>
+
+          <div style="padding: 1rem; background: rgba(255, 255, 255, 0.03); border-radius: var(--radius-md); border: 1px solid var(--border-glass); text-align: center; opacity: 0.6;">
+            <div style="font-size: 2.5rem;">👑</div>
+            <h4 style="font-size: 1rem; margin-top: 0.5rem;">30-Day Master</h4>
+            <small style="color: var(--text-muted);">Locked</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <h3>⚖️ Current Body Index</h3>
+        <div style="margin-top: 1rem;">
+          <div style="font-size: 1.5rem; font-weight: 700; color: {{ bmi_info.color }};">
+            BMI: {{ bmi }} ({{ bmi_info.category }})
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;">
+            {{ bmi_info.advice }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - FitAI Pro Production{% endblock %}
+
+{% block content %}
+<div class="container" style="padding-top: 2rem; padding-bottom: 4rem;">
+
+  <!-- AI Daily Motivation Banner -->
+  <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%); border: 1px solid var(--border-accent); border-radius: var(--radius-md); padding: 1rem 1.5rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h4 style="color: #a5b4fc; font-size: 0.95rem;">🤖 FitAI Pro AI Daily Motivation</h4>
+      <div style="font-size: 1.05rem; font-weight: 600; color: white; margin-top: 0.25rem;">
+        {{ ai_motivation }}
+      </div>
+    </div>
+    <a href="{{ url_for('chatbot') }}" class="btn btn-secondary" style="padding: 0.45rem 1rem; font-size: 0.85rem;">Ask AI Assistant</a>
+  </div>
+
+  <!-- Welcome Header -->
+  <div class="glass-card" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div>
+      <h2 style="font-size: 2rem;">Welcome Back, {{ user.username }}! 👋</h2>
+      <p style="color: var(--text-muted);">
+        Goal: <b style="color: var(--primary);">{{ user.goal }}</b> | Age: {{ user.age }} | Height: {{ user.height }} cm | Weight: {{ user.weight }} kg
+      </p>
+    </div>
+    <div style="display: flex; gap: 1rem;">
+      <a href="{{ url_for('profile') }}" class="btn btn-secondary">Edit Profile</a>
+      <a href="{{ url_for('workout_planner') }}" class="btn btn-primary">Generate Workout</a>
+    </div>
+  </div>
+
+  <!-- Key Metrics Row -->
+  <div class="grid-4" style="margin-bottom: 2rem;">
+    <div class="glass-card">
+      <div style="color: var(--text-muted); font-size: 0.9rem;">BMI Status</div>
+      <h3 style="font-size: 1.8rem; color: {{ bmi_info.color }}; margin: 0.25rem 0;">
+        {{ bmi }}
+      </h3>
+      <span class="badge" style="background: {{ bmi_info.color }}22; color: {{ bmi_info.color }}; border: 1px solid {{ bmi_info.color }}44;">
+        {{ bmi_info.category }}
+      </span>
+    </div>
+
+    <div class="glass-card">
+      <div style="color: var(--text-muted); font-size: 0.9rem;">Daily Calorie Target</div>
+      <h3 style="font-size: 1.8rem; color: var(--primary); margin: 0.25rem 0;">
+        {{ targets.target_calories }} <span style="font-size: 1rem;">kcal</span>
+      </h3>
+      <div style="font-size: 0.8rem; color: var(--text-muted);">BMR: {{ targets.bmr }} kcal</div>
+    </div>
+
+    <div class="glass-card">
+      <div style="color: var(--text-muted); font-size: 0.9rem;">Daily Protein Target</div>
+      <h3 style="font-size: 1.8rem; color: var(--secondary); margin: 0.25rem 0;">
+        {{ targets.protein_g }} <span style="font-size: 1rem;">g</span>
+      </h3>
+      <div style="font-size: 0.8rem; color: var(--text-muted);">Water: {{ targets.water_liters }} L</div>
+    </div>
+
+    <div class="glass-card">
+      <div style="color: var(--text-muted); font-size: 0.9rem;">AI Workout Completion</div>
+      <h3 style="font-size: 1.8rem; color: var(--accent-orange); margin: 0.25rem 0;">
+        {{ ai_weekly_report.completion_rate }}%
+      </h3>
+      <div style="font-size: 0.8rem; color: var(--text-muted);">Workouts Completed: {{ completed_workouts_cnt }}</div>
+    </div>
+  </div>
+
+  <!-- Main Grid: Recommended Exercises & Regional Tamil Nadu Diet Plan -->
+  <div class="grid-2" style="margin-bottom: 2rem;">
+    
+    <!-- AI Exercise Recommendations with MET Calories Burned -->
+    <div class="glass-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>💪 AI Recommended Exercises (870+ Dataset)</h3>
+        <a href="{{ url_for('exercises') }}" style="font-size: 0.85rem;">View All 870+ →</a>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 1rem;">
+        {% for ex in rec_ex %}
+          <div style="display: flex; gap: 1rem; align-items: center; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+            <img src="{{ ex.gifUrl }}" style="width: 65px; height: 65px; object-fit: cover; border-radius: 8px;" onerror="this.src='https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500';">
+            <div style="flex: 1;">
+              <h4 style="font-size: 0.95rem; margin-bottom: 0.2rem;">{{ ex.name }}</h4>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">
+                {{ ex.recommended_sets }} sets | <b style="color: var(--secondary);">~{{ ex.caloriesBurned }} kcal (MET {{ ex.met }})</b>
+              </div>
+            </div>
+            <a href="{{ url_for('exercise_detail', ex_id=ex.id) }}" class="btn btn-secondary" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">GIF & Spec</a>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- AI Regional Tamil Nadu Diet Plan -->
+    <div class="glass-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>🥗 Tamil Nadu Regional Meal Plan</h3>
+        <a href="{{ url_for('diet_planner') }}" style="font-size: 0.85rem;">Full Planner →</a>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <div style="padding: 0.75rem; background: rgba(99, 102, 241, 0.1); border-left: 3px solid var(--primary); border-radius: 6px;">
+          <small style="color: var(--primary); font-weight: 700;">BREAKFAST</small>
+          <div style="font-weight: 600; font-size: 0.95rem;">{{ rec_diet.breakfast.title }}</div>
+          <small style="color: var(--text-muted);">{{ rec_diet.breakfast.calories_num }} kcal | {{ rec_diet.breakfast.protein_num }}g protein</small>
+        </div>
+
+        <div style="padding: 0.75rem; background: rgba(16, 185, 129, 0.1); border-left: 3px solid var(--secondary); border-radius: 6px;">
+          <small style="color: var(--secondary); font-weight: 700;">LUNCH</small>
+          <div style="font-weight: 600; font-size: 0.95rem;">{{ rec_diet.lunch.title }}</div>
+          <small style="color: var(--text-muted);">{{ rec_diet.lunch.calories_num }} kcal | {{ rec_diet.lunch.protein_num }}g protein</small>
+        </div>
+
+        <div style="padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid #f59e0b; border-radius: 6px;">
+          <small style="color: #f59e0b; font-weight: 700;">DINNER</small>
+          <div style="font-weight: 600; font-size: 0.95rem;">{{ rec_diet.dinner.title }}</div>
+          <small style="color: var(--text-muted);">{{ rec_diet.dinner.calories_num }} kcal | {{ rec_diet.dinner.protein_num }}g protein</small>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 0.85rem; padding-top: 0.5rem; border-top: 1px solid var(--border-glass);">
+          <span>Total Calories: <b>~{{ rec_diet.total_calories }} kcal</b></span>
+          <span>Protein: <b>~{{ rec_diet.total_protein }}g</b></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Progress Chart Preview -->
+  <div class="glass-card">
+    <h3>📈 Weight Progress & Body Analytics Timeline</h3>
+    <div style="height: 250px; margin-top: 1rem;">
+      <canvas id="weightChart"></canvas>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const dates = [{% for log in weight_logs %}"{{ log.recorded_at[:10] }}",{% endfor %}];
+    const weights = [{% for log in weight_logs %}{{ log.weight_kg }},{% endfor %}];
+    renderWeightHistoryChart('weightChart', dates.length ? dates : ['Week 1', 'Week 2', 'Week 3', 'Week 4'], weights.length ? weights : [76, 75, 73.5, 72]);
+  });
+</script>
+{% endblock %}

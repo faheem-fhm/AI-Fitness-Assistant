@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero container">
+  <h1 class="hero-title">Transform Your Fitness with Precision AI Coaching</h1>
+  <p class="hero-subtitle">
+    AI-powered Exercise Recommendations, Regional South Indian Diet Planning, Intelligent 7-Day & 30-Day Workout Generation, and RAG Chatbot Guidance.
+  </p>
+  
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <a href="{{ url_for('dashboard') }}" class="btn btn-primary" style="font-size: 1.1rem; padding: 0.9rem 2rem;">
+      🔥 Go to Dashboard
+    </a>
+    <a href="{{ url_for('chatbot') }}" class="btn btn-secondary" style="font-size: 1.1rem; padding: 0.9rem 2rem;">
+      🤖 Try AI Chatbot
+    </a>
+  </div>
+</section>
+
+<!-- Statistics Banner -->
+<section class="container" style="margin-bottom: 4rem;">
+  <div class="grid-4">
+    <div class="glass-card" style="text-align: center;">
+      <h2 style="font-size: 2.5rem; color: var(--primary);">{{ stats.total_exercises }}+</h2>
+      <p style="color: var(--text-muted);">Curated Exercises</p>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+      <h2 style="font-size: 2.5rem; color: var(--secondary);">{{ stats.total_meals }}</h2>
+      <p style="color: var(--text-muted);">South Indian Regional Meals</p>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+      <h2 style="font-size: 2.5rem; color: var(--accent-cyan);">{{ stats.total_users }}+</h2>
+      <p style="color: var(--text-muted);">Active Users</p>
+    </div>
+    <div class="glass-card" style="text-align: center;">
+      <h2 style="font-size: 2.5rem; color: var(--accent-orange);">99.8%</h2>
+      <p style="color: var(--text-muted);">AI Recommendation Accuracy</p>
+    </div>
+  </div>
+</section>
+
+<!-- Exercise Categories Section -->
+<section class="container" style="margin-bottom: 4rem;">
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <h2>Explore Exercise Categories</h2>
+    <p style="color: var(--text-muted);">Target specific body parts with full instructions, equipment guides, and YouTube video tutorials.</p>
+  </div>
+
+  <div class="grid-3">
+    <a href="{{ url_for('exercises', body_part='chest') }}" class="glass-card" style="display: block;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🏋️‍♂️</div>
+      <h3>Chest & Pectorals</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Bench Press, Dumbbell Flyes, Push-ups and Incline Presses.</p>
+    </a>
+    <a href="{{ url_for('exercises', body_part='back') }}" class="glass-card" style="display: block;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🧗‍♂️</div>
+      <h3>Back & Lats</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Deadlifts, Pull-ups, Bent-over Rows, and Lat Pulldowns.</p>
+    </a>
+    <a href="{{ url_for('exercises', body_part='legs') }}" class="glass-card" style="display: block;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🦵</div>
+      <h3>Legs & Lower Body</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Squats, Romanian Deadlifts, Lunges, and Calf Raises.</p>
+    </a>
+    <a href="{{ url_for('exercises', body_part='shoulders') }}" class="glass-card" style="display: block;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">🎯</div>
+      <h3>Shoulders & Delts</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Overhead Press, Lateral Raises, and Face Pulls.</p>
+    </a>
+    <a href="{{ url_for('exercises', body_part='upper arms') }}" class="glass-card" style="display: block;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">💪</div>
+      <h3>Arms (Biceps & Triceps)</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Barbell Curls, Triceps Dips, Pushdowns, and Hammer Curls.</p>
+    </a>
+    <a href="{{ url_for('exercises', body_part='cardio') }}" class="glass-card" style="display: block;">
+      <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">⚡</div>
+      <h3>Cardio & Core</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Interval Running, Jump Rope, Planks, and Burpees.</p>
+    </a>
+  </div>
+</section>
+
+<!-- Popular Exercises Section -->
+<section class="container" style="margin-bottom: 4rem;">
+  <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+    <div>
+      <h2>Popular Exercises</h2>
+      <p style="color: var(--text-muted);">Top trending workouts from our dataset.</p>
+    </div>
+    <a href="{{ url_for('exercises') }}" class="btn btn-secondary">View All Exercises →</a>
+  </div>
+
+  <div class="grid-3">
+    {% for ex in popular_exercises %}
+      <div class="glass-card">
+        <img src="{{ ex.gifUrl }}" alt="{{ ex.name }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: var(--radius-md); margin-bottom: 1rem;" onerror="this.src='https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500';">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span class="badge badge-primary">{{ ex.bodyPart }}</span>
+          <span class="badge badge-{{ ex.difficulty.lower() }}">{{ ex.difficulty }}</span>
+        </div>
+        <h3 style="margin-bottom: 0.5rem;">{{ ex.name }}</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+          Target: <b>{{ ex.target }}</b> | Equipment: <b>{{ ex.equipment }}</b>
+        </p>
+        <a href="{{ url_for('exercise_detail', ex_id=ex.id) }}" class="btn btn-secondary" style="width: 100%; padding: 0.5rem;">View Exercise Details</a>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
