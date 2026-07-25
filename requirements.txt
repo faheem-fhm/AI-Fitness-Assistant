@@ -98,7 +98,7 @@ requests==2.34.2
 rich==15.0.0
 rpds-py==2026.6.3
 scikit-learn==1.6.1
-scipy==1.18.0
+scipy==1.17.1
 setuptools==83.0.0
 shellingham==1.5.4
 six==1.17.0
