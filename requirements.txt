@@ -65,7 +65,7 @@ murmurhash==1.0.15
 namex==0.1.0
 narwhals==2.24.0
 nltk==3.10.0
-numpy==2.5.1
+numpy==2.3.2
 opt_einsum==3.4.0
 optree==0.19.1
 packaging==26.2
